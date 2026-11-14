@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ma liste — MELACH VE’OR</title>
+  <meta name="description" content="Votre liste de lectures personnelle sur MELACH VE’OR.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="ma-liste">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <section class="page-entete">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a> / Ma liste</nav>
+        <span class="surtitre">Vos prochaines lectures</span>
+        <h1>Ma liste</h1>
+        <p>Les livres que vous avez mis de côté. Votre liste est enregistrée uniquement sur cet appareil, dans votre navigateur.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:2.5rem">
+      <div class="conteneur">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+          <p class="compte-resultats" id="compte" style="margin:0" aria-live="polite"></p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button type="button" class="btn btn-secondaire" id="copier-liste" hidden>Copier ma liste</button>
+            <button type="button" class="btn btn-secondaire" id="vider-liste" hidden>Vider la liste</button>
+          </div>
+        </div>
+        <div class="grille-livres" id="liste"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var el = document.getElementById("liste");
+      var compte = document.getElementById("compte");
+      var btnVider = document.getElementById("vider-liste");
+      var btnCopier = document.getElementById("copier-liste");
+      function afficher() {
+        var ids = MV.liste.tous();
+        compte.textContent = ids.length ? ids.length + " livre" + (ids.length > 1 ? "s" : "") + " dans votre liste" : "";
+        btnVider.hidden = btnCopier.hidden = !ids.length;
+        if (!ids.length) {
+          el.innerHTML = '<div class="vide" style="grid-column:1/-1"><h3>Votre liste est encore vide</h3><p>Ajoutez des livres avec le bouton « Ajouter à ma liste » pour les retrouver ici.</p><a class="btn btn-primaire" href="decouvrir.html">Découvrir des lectures</a></div>';
+        } else {
+          el.innerHTML = ids.map(function (id) { return MV.carteLivre(MV.livre(id)); }).join("");
+        }
+      }
+      document.addEventListener("mv:liste", function () {
+        afficher();
+        document.querySelectorAll("#liste [data-basculer-liste]").forEach(function (b) {
+          b.setAttribute("aria-pressed", "true");
+          b.innerHTML = MV.icone("marquePagePlein") + "<span>Retirer de ma liste</span>";
+        });
+      });
+      btnVider.addEventListener("click", function () {
+        if (confirm("Vider toute votre liste de lecture ?")) { MV.liste.vider(); MV.toast("Liste vidée"); }
+      });
+      btnCopier.addEventListener("click", function () {
+        var txt = "Ma liste de lecture — MELACH VE’OR\n\n" + MV.liste.tous().map(function (id) { var l = MV.livre(id); return "• " + l.titre + " — " + l.auteur; }).join("\n");
+        MV.copier(txt).then(function () { MV.toast("Liste copiée"); }, function () { MV.toast("Impossible de copier la liste"); });
+      });
+      afficher();
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

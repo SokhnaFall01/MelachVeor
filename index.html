@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MELACH VE’OR — Des lectures pour nourrir la pensée et l’âme</title>
+  <meta name="description" content="MELACH VE’OR : recommandations et découvertes littéraires. Livres chrétiens, romans, politique, culture et société pour nourrir la pensée, fortifier la foi et éclairer le monde.">
+  <meta property="og:title" content="MELACH VE’OR — Des lectures pour nourrir la pensée et l’âme">
+  <meta property="og:description" content="Des lectures pour nourrir la pensée, fortifier la foi et éclairer le monde.">
+  <meta property="og:image" content="assets/img/logo-original.jpg">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="accueil">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <!-- 1. Accueil -->
+    <section class="hero">
+      <div class="conteneur hero-inner">
+        <div>
+          <span class="surtitre">Lectures choisies avec attention</span>
+          <h1>Des livres pour nourrir la pensée et <em>l’âme</em></h1>
+          <p class="hero-intro">MELACH VE’OR vous accompagne vers des ouvrages chrétiens, des romans, des essais politiques, culturels et de société, pour habiter le monde avec plus de nuance, de curiosité et d’espérance.</p>
+          <form class="barre-recherche" action="decouvrir.html" method="get" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+            <label class="sr-only" for="recherche-accueil">Rechercher un livre, un auteur ou une thématique</label>
+            <input id="recherche-accueil" name="q" type="search" placeholder="Rechercher un livre, un auteur ou une thématique" autocomplete="off">
+            <button class="btn btn-primaire" type="submit">Explorer les recommandations</button>
+          </form>
+          <p class="hero-signature">« Vous êtes le sel de la terre et la lumière du monde. » — Matthieu 5:13-14</p>
+        </div>
+        <div class="hero-visuel">
+          <img src="assets/img/emblem.png" alt="Emblème MELACH VE’OR : une salière, une flamme rayonnante et une ville sur une montagne" width="560" height="402">
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Explorer par thématique -->
+    <section class="section">
+      <div class="conteneur">
+        <div class="section-entete apparition">
+          <div>
+            <span class="surtitre">Parcourir à votre rythme</span>
+            <h2 class="titre-section">Explorer par thématique</h2>
+          </div>
+          <p class="chapo">Quelques chemins de lecture pour ouvrir une réflexion, une conversation ou un temps de pause.</p>
+        </div>
+        <div class="grille-themes apparition" data-grille-themes></div>
+      </div>
+    </section>
+
+    <!-- 3. Recommandations du moment -->
+    <section class="section section-teintee">
+      <div class="conteneur">
+        <div class="section-entete apparition">
+          <div>
+            <span class="surtitre">À la une</span>
+            <h2 class="titre-section">Recommandations du moment</h2>
+            <p class="chapo">Une sélection de lectures choisies avec soin pour vous aider à trouver votre prochain livre.</p>
+          </div>
+          <a class="lien-fleche" href="decouvrir.html">Toutes les recommandations <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="grille-livres apparition" data-livres="une"></div>
+      </div>
+    </section>
+
+    <!-- 4. Trouver selon votre envie -->
+    <section class="section">
+      <div class="conteneur">
+        <div class="bloc-envies apparition" data-envies>
+          <span class="surtitre">Une lecture pour maintenant</span>
+          <h2 class="titre-section">Trouver selon votre envie</h2>
+          <div class="puces" role="group" aria-label="Choisir une envie"></div>
+          <p class="envie-description" aria-live="polite"></p>
+          <div class="envie-resultats"></div>
+          <p style="margin:1.25rem 0 0"><a class="lien-fleche" href="decouvrir.html" data-envie-lien hidden><span>Voir toutes les lectures</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Un instant de lumière -->
+    <section class="section" style="padding-top:1rem">
+      <div class="conteneur">
+        <div class="verset apparition" data-verset>
+          <div>
+            <span class="surtitre">Un instant de lumière</span>
+            <h2 class="titre-section" data-verset-titre>Verset du jour</h2>
+            <p class="verset-reference" data-verset-ref></p>
+            <blockquote data-verset-texte></blockquote>
+            <p class="verset-reflexion" data-verset-reflexion></p>
+            <p class="verset-version">Traduction Louis Segond (1910)</p>
+          </div>
+          <div class="verset-actions">
+            <button type="button" class="btn btn-secondaire" data-verset-copier>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+              Copier le verset
+            </button>
+            <button type="button" class="btn btn-primaire" data-verset-autre>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg>
+              Découvrir un autre verset
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Sélection éditoriale -->
+    <section class="section">
+      <div class="conteneur">
+        <div class="editorial apparition" id="selection-une"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var s = MV.SELECTIONS.filter(function (x) { return x.une; })[0] || MV.SELECTIONS[0];
+      var el = document.getElementById("selection-une");
+      el.innerHTML =
+        '<span class="surtitre">Sélection éditoriale</span>' +
+        '<h3>' + MV.echapper(s.titre) + '</h3>' +
+        '<blockquote>' + MV.echapper(s.citation) + '</blockquote>' +
+        '<div class="editorial-livres">' + s.livres.map(function (id) {
+          var l = MV.livre(id);
+          return '<a href="livre.html?id=' + l.id + '" aria-label="' + MV.echapper(l.titre + ", " + l.auteur) + '">' + MV.couverture(l, "couverture-mini") + '</a>';
+        }).join("") + '</div>' +
+        '<a class="btn btn-primaire" href="selections.html#' + s.id + '">Voir la sélection complète</a>';
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

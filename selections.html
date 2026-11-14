@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sélections — MELACH VE’OR</title>
+  <meta name="description" content="Les sélections éditoriales de MELACH VE’OR : des livres réunis autour d’un thème, d’une réflexion ou d’un sujet d’actualité.">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="selections">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <section class="page-entete">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a> / Sélections</nav>
+        <span class="surtitre">Sélections éditoriales</span>
+        <h1>Des lectures qui se répondent</h1>
+        <p>Chaque sélection rassemble quelques livres autour d’un thème, d’une réflexion ou d’une question d’actualité, pour lire autrement : en dialogue.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:1rem">
+      <div class="conteneur" id="liste-selections"></div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var el = document.getElementById("liste-selections");
+      el.innerHTML = MV.SELECTIONS.map(function (s) {
+        return '<article class="selection-bloc" id="' + s.id + '">' +
+          '<div><span class="surtitre">Sélection</span><h2>' + MV.echapper(s.titre) + '</h2>' +
+          '<p style="font-family:var(--serif);font-style:italic;color:var(--prune)">' + MV.echapper(s.citation) + '</p>' +
+          '<p style="color:var(--gris)">' + MV.echapper(s.texte) + '</p></div>' +
+          '<div class="grille-livres" data-sel="' + s.livres.join(",") + '"></div></article>';
+      }).join("");
+      el.querySelectorAll("[data-sel]").forEach(function (g) {
+        MV.rendreLivres(g, g.getAttribute("data-sel").split(",").map(MV.livre).filter(Boolean));
+      });
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

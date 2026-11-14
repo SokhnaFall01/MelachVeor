@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fiche livre — MELACH VE’OR</title>
+  <meta name="description" content="Présentation, résumé et recommandation d’un ouvrage sélectionné par MELACH VE’OR.">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="livre">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <section class="section" style="padding-top:2.5rem">
+      <div class="conteneur" id="fiche"></div>
+    </section>
+
+    <section class="section section-teintee" id="bloc-similaires" hidden>
+      <div class="conteneur">
+        <div class="section-entete">
+          <div>
+            <span class="surtitre">Pour prolonger</span>
+            <h2 class="titre-section">Dans la même veine</h2>
+          </div>
+        </div>
+        <div class="grille-livres" id="similaires"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var el = document.getElementById("fiche");
+      var l = MV.livre(MV.param("id"));
+      if (!l) {
+        el.innerHTML = '<div class="vide"><h3>Ce livre est introuvable</h3><p>Il a peut-être été déplacé. Vous pouvez parcourir toutes nos recommandations.</p><a class="btn btn-primaire" href="decouvrir.html">Découvrir les lectures</a></div>';
+        return;
+      }
+      var t = MV.theme(l.theme);
+      document.title = l.titre + " — " + l.auteur + " | MELACH VE’OR";
+      var meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute("content", l.resume);
+
+      var liens = (l.liens && l.liens.length)
+        ? '<div class="encart"><h2 style="font-size:1rem;margin-bottom:.75rem">Trouver ce livre</h2><div style="display:grid;gap:.5rem">' +
+            l.liens.map(function (x) { return '<a class="btn btn-secondaire" href="' + MV.echapper(x.url) + '" target="_blank" rel="noopener">' + MV.echapper(x.nom) + '</a>'; }).join("") +
+          '</div></div>'
+        : '';
+
+      el.innerHTML =
+        '<nav class="fil-ariane" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a> / <a href="decouvrir.html?theme=' + t.id + '">' + MV.echapper(t.nom) + '</a> / ' + MV.echapper(l.titre) + '</nav>' +
+        '<div class="fiche" data-theme="' + l.theme + '">' +
+          '<aside class="fiche-cote">' + MV.couverture(l, "couverture-grande") +
+            '<button type="button" class="btn btn-primaire btn-bloc" data-basculer-liste="' + l.id + '"></button>' +
+            '<button type="button" class="btn btn-secondaire btn-bloc" id="partager">' + MV.icone("partage") + '<span>Partager cette lecture</span></button>' +
+            liens +
+          '</aside>' +
+          '<article>' +
+            '<span class="etiquette">' + MV.echapper(t.nom) + '</span>' +
+            '<h1>' + MV.echapper(l.titre) + '</h1>' +
+            '<p class="auteur">' + MV.echapper(l.auteur) + '</p>' +
+            '<div class="fiche-meta">' +
+              '<span>Parution : <strong>' + MV.echapper(l.anneeTexte || l.annee) + '</strong></span>' +
+              '<span>Niveau : <strong>' + MV.echapper(l.niveau) + '</strong></span>' +
+            '</div>' +
+            '<p class="appreciation" style="margin:0 0 1.25rem">' + MV.points(l.appreciation) + '<span><span class="sr-only">Appréciation ' + l.appreciation + ' sur 5 : </span>' + MV.echapper(l.libelle) + '</span></p>' +
+            '<div class="fiche-envies">' + l.envies.map(function (id) { var e = MV.envie(id); return '<a class="puce" href="decouvrir.html?envie=' + e.id + '">' + MV.icone(e.icone) + MV.echapper(e.nom) + '</a>'; }).join("") + '</div>' +
+            '<div class="prose" style="margin-top:2rem">' +
+              '<p style="font-family:var(--serif);font-size:1.2rem;color:var(--encre);line-height:1.5">' + MV.echapper(l.resume) + '</p>' +
+              '<h2>Présentation</h2>' + l.presentation.map(function (p) { return '<p>' + MV.echapper(p) + '</p>'; }).join("") +
+              '<div class="fiche-encart-pourquoi"><h2>Pourquoi le lire ?</h2><p>' + MV.echapper(l.pourquoi) + '</p>' +
+              '<p><strong style="color:var(--encre)">Pour qui ?</strong> ' + MV.echapper(l.pourQui) + '</p></div>' +
+            '</div>' +
+          '</article>' +
+        '</div>';
+
+      document.getElementById("partager").addEventListener("click", function () {
+        var data = { title: l.titre + " — " + l.auteur, text: "Une lecture recommandée par MELACH VE’OR : " + l.titre + " (" + l.auteur + ")", url: location.href };
+        if (navigator.share) { navigator.share(data).catch(function () {}); }
+        else { MV.copier(location.href).then(function () { MV.toast("Lien copié"); }, function () { MV.toast("Impossible de copier le lien"); }); }
+      });
+
+      var sim = MV.LIVRES.filter(function (x) { return x.id !== l.id && (x.theme === l.theme || x.envies.some(function (e) { return l.envies.indexOf(e) !== -1; })); })
+        .sort(function (a, b) { return (b.theme === l.theme) - (a.theme === l.theme) || b.appreciation - a.appreciation; }).slice(0, 4);
+      if (sim.length) {
+        document.getElementById("bloc-similaires").hidden = false;
+        MV.rendreLivres(document.getElementById("similaires"), sim);
+      }
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

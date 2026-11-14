@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — MELACH VE’OR</title>
+  <meta name="description" content="Contacter MELACH VE’OR : une question, une suggestion de lecture, un mot.">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <section class="page-entete">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a> / Contact</nav>
+        <span class="surtitre">Écrire</span>
+        <h1>Contact</h1>
+        <p>Une question, une suggestion de lecture, un retour sur une recommandation ? Votre message sera lu avec attention.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="conteneur deux-colonnes">
+        <form class="formulaire encart" id="formulaire-contact" novalidate>
+          <div class="champs-duo">
+            <div class="champ">
+              <label for="nom">Nom</label>
+              <input id="nom" name="nom" type="text" autocomplete="name" required>
+            </div>
+            <div class="champ">
+              <label for="email">Adresse e-mail</label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="champ">
+            <label for="sujet">Objet</label>
+            <select id="sujet" name="sujet">
+              <option>Une question</option>
+              <option>Suggérer un livre</option>
+              <option>Un retour sur une recommandation</option>
+              <option>Proposer une collaboration</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="champ">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          </div>
+          <label class="champ-case">
+            <input type="checkbox" name="consentement" required>
+            <span>J’accepte que mes informations soient utilisées uniquement pour répondre à ma demande. <a href="confidentialite.html">En savoir plus</a>.</span>
+          </label>
+          <!-- Champ piège anti-spam, invisible pour les visiteurs -->
+          <input type="text" name="_site" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+          <div class="message-formulaire" id="retour" role="status" aria-live="polite"></div>
+          <button type="submit" class="btn btn-primaire">Envoyer le message</button>
+        </form>
+
+        <aside>
+          <div class="encart" style="margin-bottom:1rem">
+            <span class="surtitre">Suggérer une lecture</span>
+            <p style="margin:0;color:var(--gris);font-size:.92rem">Vous avez lu un livre qui vous a éclairé ? Indiquez son titre, son auteur et quelques mots sur ce qu’il vous a apporté.</p>
+          </div>
+          <div class="encart">
+            <span class="surtitre">Par e-mail</span>
+            <p style="margin:0;font-size:.92rem"><a id="email-direct" href="#"></a></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var form = document.getElementById("formulaire-contact");
+      var retour = document.getElementById("retour");
+      var lien = document.getElementById("email-direct");
+      lien.textContent = MV.SITE.emailContact;
+      lien.href = "mailto:" + MV.SITE.emailContact;
+
+      function message(type, texte) { retour.className = "message-formulaire " + type; retour.textContent = texte; }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (form._site.value) return; // robot
+        if (!form.checkValidity()) {
+          var premier = form.querySelector(":invalid");
+          message("erreur", "Merci de compléter tous les champs et d’accepter la mention de confidentialité.");
+          if (premier) premier.focus();
+          return;
+        }
+        var donnees = { nom: form.nom.value.trim(), email: form.email.value.trim(), sujet: form.sujet.value, message: form.message.value.trim() };
+
+        if (MV.SITE.formulaireEndpoint) {
+          var btn = form.querySelector("[type=submit]");
+          btn.disabled = true; btn.textContent = "Envoi en cours…";
+          fetch(MV.SITE.formulaireEndpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(donnees) })
+            .then(function (r) { if (!r.ok) throw new Error(); form.reset(); message("succes", "Merci ! Votre message a bien été envoyé. Une réponse vous sera apportée dès que possible."); })
+            .catch(function () { message("erreur", "L’envoi n’a pas abouti. Vous pouvez écrire directement à " + MV.SITE.emailContact + "."); })
+            .then(function () { btn.disabled = false; btn.textContent = "Envoyer le message"; });
+        } else {
+          var corps = donnees.message + "\n\n— " + donnees.nom + " (" + donnees.email + ")";
+          window.location.href = "mailto:" + MV.SITE.emailContact + "?subject=" + encodeURIComponent("[MELACH VE’OR] " + donnees.sujet) + "&body=" + encodeURIComponent(corps);
+          message("succes", "Votre messagerie va s’ouvrir avec votre message prêt à être envoyé.");
+        }
+      });
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>

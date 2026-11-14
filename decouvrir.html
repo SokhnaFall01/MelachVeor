@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Découvrir — MELACH VE’OR</title>
+  <meta name="description" content="Toutes les recommandations de MELACH VE’OR : recherchez par livre, auteur, thématique ou envie de lecture.">
+  <meta name="theme-color" content="#754D70">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="decouvrir">
+  <a class="lien-evitement" href="#contenu">Aller au contenu</a>
+  <header id="entete"></header>
+
+  <main id="contenu">
+    <section class="page-entete">
+      <div class="conteneur">
+        <nav class="fil-ariane" aria-label="Fil d’Ariane"><a href="index.html">Accueil</a> / Découvrir</nav>
+        <span class="surtitre">Toutes les recommandations</span>
+        <h1>Découvrir</h1>
+        <p>Cherchez un titre, un auteur ou une idée, puis affinez selon la thématique ou l’envie du moment.</p>
+        <form class="barre-recherche" role="search" id="form-recherche" style="margin-top:1.5rem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+          <label class="sr-only" for="q">Rechercher</label>
+          <input id="q" name="q" type="search" placeholder="Rechercher un livre, un auteur ou une thématique" autocomplete="off">
+        </form>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:2.5rem">
+      <div class="conteneur">
+        <div class="filtres">
+          <div class="filtres-ligne" role="group" aria-label="Filtrer par thématique">
+            <span class="filtres-libelle">Thématique</span>
+            <div class="puces" id="filtre-themes" style="margin:0"></div>
+          </div>
+          <div class="filtres-ligne" role="group" aria-label="Filtrer par envie">
+            <span class="filtres-libelle">Envie</span>
+            <div class="puces" id="filtre-envies" style="margin:0"></div>
+          </div>
+        </div>
+        <p class="compte-resultats" id="compte" aria-live="polite"></p>
+        <div class="grille-livres" id="resultats"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pied"></footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    MV.page = function () {
+      var etat = { q: MV.param("q") || "", theme: MV.param("theme") || "", envie: MV.param("envie") || "" };
+      var input = document.getElementById("q");
+      var ft = document.getElementById("filtre-themes");
+      var fe = document.getElementById("filtre-envies");
+      var res = document.getElementById("resultats");
+      var compte = document.getElementById("compte");
+      input.value = etat.q;
+
+      function puce(type, id, nom, icone) {
+        return '<button type="button" class="puce" data-' + type + '="' + id + '" aria-pressed="false">' + (icone ? MV.icone(icone) : "") + MV.echapper(nom) + '</button>';
+      }
+      ft.innerHTML = puce("theme", "", "Toutes") + MV.THEMES.map(function (t) { return puce("theme", t.id, t.court, t.icone); }).join("");
+      fe.innerHTML = puce("envie", "", "Toutes") + MV.ENVIES.map(function (e) { return puce("envie", e.id, e.nom, e.icone); }).join("");
+
+      function texteLivre(l) {
+        var t = MV.theme(l.theme);
+        return MV.normaliser([l.titre, l.auteur, l.resume, l.presentation.join(" "), t.nom, t.longue, l.envies.map(function (e) { return MV.envie(e).nom; }).join(" ")].join(" "));
+      }
+
+      function appliquer() {
+        var mots = MV.normaliser(etat.q).split(/\s+/).filter(Boolean);
+        var livres = MV.LIVRES.filter(function (l) {
+          if (etat.theme && l.theme !== etat.theme) return false;
+          if (etat.envie && l.envies.indexOf(etat.envie) === -1) return false;
+          if (!mots.length) return true;
+          var t = texteLivre(l);
+          return mots.every(function (m) { return t.indexOf(m) !== -1; });
+        });
+        ft.querySelectorAll("[data-theme]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-theme") === etat.theme ? "true" : "false"); });
+        fe.querySelectorAll("[data-envie]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-envie") === etat.envie ? "true" : "false"); });
+        compte.textContent = livres.length + " lecture" + (livres.length > 1 ? "s" : "") + " trouvée" + (livres.length > 1 ? "s" : "");
+        if (!livres.length) {
+          res.innerHTML = '<div class="vide" style="grid-column:1/-1"><h3>Aucune lecture trouvée</h3><p>Essayez un autre mot, ou élargissez les filtres.</p><button type="button" class="btn btn-secondaire" id="reinit">Réinitialiser la recherche</button></div>';
+          document.getElementById("reinit").onclick = function () { etat = { q: "", theme: "", envie: "" }; input.value = ""; appliquer(); };
+        } else {
+          MV.rendreLivres(res, livres);
+        }
+        var p = new URLSearchParams();
+        if (etat.q) p.set("q", etat.q);
+        if (etat.theme) p.set("theme", etat.theme);
+        if (etat.envie) p.set("envie", etat.envie);
+        try { history.replaceState(null, "", "decouvrir.html" + (p.toString() ? "?" + p : "")); } catch (e) {}
+      }
+
+      ft.addEventListener("click", function (e) { var b = e.target.closest("[data-theme]"); if (b) { etat.theme = b.getAttribute("data-theme"); appliquer(); } });
+      fe.addEventListener("click", function (e) { var b = e.target.closest("[data-envie]"); if (b) { etat.envie = b.getAttribute("data-envie"); appliquer(); } });
+      input.addEventListener("input", function () { etat.q = input.value; appliquer(); });
+      document.getElementById("form-recherche").addEventListener("submit", function (e) { e.preventDefault(); etat.q = input.value; appliquer(); });
+      appliquer();
+    };
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>
