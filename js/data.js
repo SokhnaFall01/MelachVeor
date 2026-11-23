@@ -15,7 +15,9 @@ MV.SITE = {
   emailContact: "melachveor@gmail.com",
   // Facultatif : URL d'un service de formulaire (ex. Formspree).
   // Laisser vide pour ouvrir la messagerie du visiteur.
-  formulaireEndpoint: ""
+  formulaireEndpoint: "",
+  // Version test : affiche un bandeau « contenus provisoires ». Passer à false pour la mise en ligne officielle.
+  versionTest: true
 };
 
 /* ---------- Thématiques ---------- */

@@ -1,0 +1,4 @@
+# Version test : le site n'est pas encore référencé par les moteurs de recherche.
+# Pour la mise en ligne officielle, remplacer "Disallow: /" par "Allow: /".
+User-agent: *
+Disallow: /

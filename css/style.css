@@ -187,7 +187,7 @@ p { margin: 0 0 1em; }
 
 @media (max-width: 900px) {
   .nav-principale {
-    position: fixed; inset: 72px 0 auto 0;
+    position: absolute; top: 100%; left: 0; right: 0;
     background: var(--blanc-casse);
     border-bottom: 1px solid var(--bordure);
     box-shadow: var(--ombre);
@@ -204,7 +204,6 @@ p { margin: 0 0 1em; }
 }
 @media (max-width: 600px) {
   .entete-inner { gap: .5rem; height: 64px; }
-  .nav-principale { inset: 64px 0 auto 0; }
   .marque { gap: .4rem; }
   .marque img { width: 40px; }
   .marque-nom { font-size: .98rem; letter-spacing: .04em; }
@@ -625,3 +624,10 @@ p { margin: 0 0 1em; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Bandeau « version test » */
+.bandeau-test {
+  background: var(--prune); color: #fff; text-align: center;
+  font-size: .8rem; padding: .5rem var(--gouttiere); line-height: 1.4;
+}
+.bandeau-test strong { color: var(--peche-clair); }

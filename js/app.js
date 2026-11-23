@@ -359,7 +359,17 @@
     els.forEach(function (e) { obs.observe(e); });
   }
 
+  /* ---------- Bandeau « version test » ---------- */
+  function rendreBandeauTest() {
+    if (!MV.SITE.versionTest) return;
+    var b = document.createElement("div");
+    b.className = "bandeau-test";
+    b.innerHTML = "<strong>Version test</strong> — les livres présentés sont provisoires et seront remplacés par la sélection définitive.";
+    document.body.insertBefore(b, document.body.firstChild);
+  }
+
   /* ---------- Démarrage ---------- */
+  rendreBandeauTest();
   rendreEntete();
   rendrePied();
   rendreRecherche();
