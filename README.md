@@ -45,3 +45,17 @@ js/data.js        Contenus
 js/app.js         En-tête, pied de page, recherche, ma liste, verset du jour
 assets/img/       Emblème du logo, favicon
 ```
+
+## Logo
+
+- `assets/img/logo/melachveor-logo-vertical.png` : logo complet (emblème + nom), format carré, fond transparent.
+- `assets/img/logo/melachveor-logo-horizontal.png` : version en longueur, fond transparent.
+- `assets/img/partage.png` : image affichée quand un lien du site est partagé.
+
+## Mise en ligne
+
+Le site est publié automatiquement sur GitHub Pages à chaque envoi sur la branche (`.github/workflows/pages.yml`) :
+https://sokhnafall01.github.io/MelachVeor/
+
+Pendant la phase de test, un bandeau « Version test » s’affiche (`versionTest: true` dans `js/data.js`) et `robots.txt` bloque le référencement.
+Pour la mise en ligne officielle : passer `versionTest` à `false` et remplacer `Disallow: /` par `Allow: /` dans `robots.txt`.
