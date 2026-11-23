@@ -12,7 +12,7 @@ MV.SITE = {
   nom: "MELACH VE’OR",
   signature: "Des lectures pour nourrir la pensée, fortifier la foi et éclairer le monde.",
   // Adresse de réception du formulaire de contact (à confirmer).
-  emailContact: "contact@melachveor.com",
+  emailContact: "melachveor@gmail.com",
   // Facultatif : URL d'un service de formulaire (ex. Formspree).
   // Laisser vide pour ouvrir la messagerie du visiteur.
   formulaireEndpoint: ""
